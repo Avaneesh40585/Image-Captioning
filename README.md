@@ -4,8 +4,6 @@
 
 The model architecture combines EfficientNetB0 CNN for visual feature extraction with a custom Transformer encoder-decoder for sequential text generation. Built entirely with TensorFlow/Keras, this system represents a modern approach to the image-to-text generation task.
 
-The project features a complete end-to-end pipeline with automatic dataset handling, advanced training techniques, and multiple inference modes for flexible caption generation.
-
 ---
 
 ## 📋 Table of Contents
