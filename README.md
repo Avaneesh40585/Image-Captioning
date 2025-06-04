@@ -8,6 +8,29 @@ The project features a complete end-to-end pipeline with automatic dataset handl
 
 ---
 
+## 📋 Table of Contents
+
+1. 📊 [About Dataset](#about-dataset)  
+2. 🏗️ [Model Architecture](#model-architecture)  
+3. ✨ [Key Features](#key-features)  
+4. 🔄 [Training Pipeline Overview](#training-pipeline-overview)  
+   - Phase 1 – Data Setup  
+   - Phase 2 – Model Architecture  
+   - Phase 3 – Training Process  
+   - Phase 4 – Testing & Evaluation  
+   - ⏱️ Total Training Time  
+5. 📋 [Requirements](#requirements)  
+6. 📁 [Project Structure](#project-structure)  
+7. 🎯 [Usage](#usage)  
+   - 🔹 Pre-trained Model (Recommended)  
+   - 🔸 From Scratch  
+8. 🎨 [Results](#results)  
+   - Generation Modes  
+9. 📚 [References](#references)  
+10. 📄 [License](#license)
+
+---
+
 ## About Dataset
 
 The model is trained on **Flickr8K Dataset** containing:
@@ -118,7 +141,8 @@ image-captioning-system/
     └── final_caption_model.keras
 ```
 ---
-## 🎯 Usage
+
+## Usage
 
 ### 🔹 Pre-trained Model (Recommended)
 
@@ -144,7 +168,6 @@ image-captioning-system/
      test_with_sampling('your_image.jpg', temperature=0.8)
      ```
 
-
 ### 🔸 From Scratch
 
 1. **Open the notebook.**
@@ -164,40 +187,6 @@ image-captioning-system/
    - Automatic validation testing on 3 random images  
    - Use provided functions to test with your own images  
    - Final model saved as `final_caption_model.keras`
-
-
-## Usage
-
-### Pre-trained Model (Recommended)
-
-1. **Download pre-trained weights** from [releases](https://github.com/Avaneesh40585/Image-Captioning/releases/tag/v1.0-weights):
-   - `best_caption_model.keras` - Best performing model
-
-2. **Open the notebook**:
-```jupyter notebook “Image Caption Generator.ipynb”```
-
-4. **Load pre-trained model** (in notebook):
-   Follow the "How to Use" section from the above link to proceed.
-   
-
-### From Scratch
-
-1. **Open the notebook**:
-```jupyter notebook “Image Caption Generator.ipynb”```
-
-2. **Run all cells** to:
-   - Automatically download Flickr8K dataset
-   - Build the complete model architecture
-   - Train with optimal hyperparameters
-   - Save the best model checkpoint
-
-**The notebook handles:**
-- Automatic dataset setup (no manual downloads needed)
-- Multi-caption training (5 captions per image)
-- Advanced learning rate scheduling
-- Early stopping and model checkpointing
-- Real-time training monitoring
-- Automatic validation and testing
 
 ---
 
