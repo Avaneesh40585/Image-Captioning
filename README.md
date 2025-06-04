@@ -6,7 +6,9 @@ The model architecture combines EfficientNetB0 CNN for visual feature extraction
 
 The project features a complete end-to-end pipeline with automatic dataset handling, advanced training techniques, and multiple inference modes for flexible caption generation.
 
-## 📊 Dataset
+---
+
+## About Dataset
 
 The model is trained on **Flickr8K Dataset** containing:
 - 8,000 high-quality images
@@ -16,9 +18,11 @@ The model is trained on **Flickr8K Dataset** containing:
 
 *Can be easily adapted for Flickr30K, MS COCO, or custom datasets*
 
-How to Download & More about it over here: ![Flickr8k Datasets](https://github.com/Avaneesh40585/Image-Captioning/releases/tag/dataset) 
+How to Download & More about it over here: [Flickr8k Datasets](https://github.com/Avaneesh40585/Image-Captioning/releases/tag/dataset) 
 
-## 🏗️ Model Architecture
+---
+
+## Model Architecture
 ```
 Input Image (299x299x3)
 ↓
@@ -44,32 +48,66 @@ Generated Caption
 - **Transformer Decoder**: 3 layers with causal masking and cross-attention
 - **Text Processing**: 12K vocabulary with learned positional embeddings
 
-## 🚀 Performance
+**A comprehensive explanation of the code is provided in the notebook itself.**
 
-The model has been trained for **30 epochs** on **6,400 training samples** of Flickr8K Dataset with advanced optimization techniques:
+---
+## Key Features
 
-- **Training Samples**: 6,400 images (32,000 captions)
-- **Validation Samples**: 1,600 images (8,000 captions)
-- **Multi-Caption Training**: 5 captions processed per image
-- **Advanced Scheduling**: Warmup + cosine decay learning rate
-- **Data Augmentation**: 5-layer image transformation pipeline
-- **Model Size**: ~250MB optimized architecture
+- **Multi-Caption Training**: Processes 5 different captions per image simultaneously for robust learning  
+- **Advanced Transformer Architecture**: Custom encoder-decoder blocks with multi-head attention and proper masking  
+- **Intelligent Learning Rate Scheduling**: Warmup phase followed by cosine decay for optimal convergence  
+- **Comprehensive Data Augmentation**: 5-layer image transformation pipeline (flip, rotation, contrast, brightness, zoom)  
+- **Automatic Model Recovery**: Smart checkpointing system saves models during training interruptions  
+- **Interactive Testing Suite**: Built-in functions for validation testing and custom image evaluation  
 
-*Achieves high-quality, grammatically correct captions with diverse vocabulary*
+---
 
-## 📋 Requirements
-<code>
+## Training Pipeline Overview
+
+### Phase 1 – Data Setup (Cells 1–15)
+- Downloads Flickr8K dataset (~1 GB) automatically via `wget`  
+- Extracts 8,000 images and 40,000 caption annotations  
+- Preprocesses text: lowercasing, adding special tokens, and vocabulary building  
+- Creates 80/20 train/validation split: 6,400 training / 1,600 validation images  
+
+### Phase 2 – Model Architecture (Cells 16–25)
+- Builds **EfficientNetB0** CNN feature extractor with frozen ImageNet weights  
+- Constructs custom Transformer encoder/decoder blocks  
+- Sets up 12K vocabulary with learned positional embeddings  
+- Configures a 5-layer image augmentation pipeline  
+
+### Phase 3 – Training Process (Cells 26–35)
+- Trains for 30 epochs using the **AdamW optimizer**  
+- Applies warmup (first 10% of steps) + cosine decay for learning rate scheduling  
+- Processes **5 captions per image** with individual gradient updates  
+- Monitors training/validation loss and accuracy in real-time  
+- Automatically saves the best model when validation loss improves  
+
+### Phase 4 – Testing & Evaluation (Cells 36–40)
+- Tests on 3 random validation images automatically  
+- Includes `test_image()` and `test_with_sampling()` functions  
+- Displays generated captions alongside input images  
+- Saves final model as `final_caption_model.keras`  
+
+### ⏱️ Total Training Time
+- **GPU**: ~0.5-1 hour  
+- **CPU**: ~2–3 hours
+
+---
+
+## Requirements
 ```
 tensorflow>=2.13.0
 keras>=2.13.0
 numpy>=1.21.0
 matplotlib>=3.5.0
 ```
-</code>
 
 These requirements can be easily installed by: `pip install -r requirements.txt`
 
-## 📁 Project Structure
+---
+
+## Project Structure
 ```
 image-captioning-system/
 ├── Image Caption Generator.ipynb    # Complete implementation notebook
@@ -79,9 +117,56 @@ image-captioning-system/
     ├── best_caption_model.keras
     └── final_caption_model.keras
 ```
-
-
+---
 ## 🎯 Usage
+
+### 🔹 Pre-trained Model (Recommended)
+
+1. **Download pre-trained weights** from [Releases](https://github.com/Avaneesh40585/Image-Captioning/releases/tag/v1.0-weights):
+   - `best_caption_model.keras` - Best performing model
+   - Follow the “How to Use” section from the [Releases](https://github.com/Avaneesh40585/Image-Captioning/releases/tag/v1.0-weights) page for detailed instructions.
+
+2. **Open the notebook.**
+```jupyter notebook “Image Caption Generator.ipynb”```
+
+3. **Load and use the pre-trained model:**
+   - Navigate to the “Model Loading & Inference” section (Cells 41–45)
+   - Load the downloaded model:
+     ```python
+     caption_model = keras.models.load_model('best_caption_model.keras')
+     ```
+   - Use for standard captions:
+     ```python
+     test_image('your_image.jpg')
+     ```
+   - Use for creative captions:
+     ```python
+     test_with_sampling('your_image.jpg', temperature=0.8)
+     ```
+
+
+### 🔸 From Scratch
+
+1. **Open the notebook.**
+```jupyter notebook “Image Caption Generator.ipynb”```
+
+2. **Execute the complete training pipeline:**  
+   Run all cells sequentially to go through all 4 phases (see [Training Pipeline Overview](#training-pipeline-overview).)
+
+3. **Monitor training progress:**
+   - Real-time loss/accuracy metrics displayed during training  
+   - Best model automatically saved as `best_caption_model.keras`  
+   - Training completes in:
+     - ~0.5–1 hour on **GPU**  
+     - ~2–3 hours on **CPU**
+
+4. **Test your trained model:**
+   - Automatic validation testing on 3 random images  
+   - Use provided functions to test with your own images  
+   - Final model saved as `final_caption_model.keras`
+
+
+## Usage
 
 ### Pre-trained Model (Recommended)
 
@@ -89,9 +174,7 @@ image-captioning-system/
    - `best_caption_model.keras` - Best performing model
 
 2. **Open the notebook**:
-<code>
 ```jupyter notebook “Image Caption Generator.ipynb”```
-</code>
 
 4. **Load pre-trained model** (in notebook):
    Follow the "How to Use" section from the above link to proceed.
@@ -100,11 +183,9 @@ image-captioning-system/
 ### From Scratch
 
 1. **Open the notebook**:
-<code>
 ```jupyter notebook “Image Caption Generator.ipynb”```
-</code>
 
-3. **Run all cells** to:
+2. **Run all cells** to:
    - Automatically download Flickr8K dataset
    - Build the complete model architecture
    - Train with optimal hyperparameters
@@ -118,60 +199,50 @@ image-captioning-system/
 - Real-time training monitoring
 - Automatic validation and testing
 
+---
 
-## 🎨 Results
+## Results
 
 | Image | Generated Caption |
 |-------|------------------|
-| ![1](https://github.com/user-attachments/assets/07743043-bf9a-4738-af91-0725177f384b) | **Generated Caption:** *a dog runs through the grass* |
-| ![2](https://github.com/user-attachments/assets/1c04991d-205e-42bb-befd-e839ab9bd3b4) | **Generated Caption:** *a black dog is jumping into the water* |
-| ![3](https://github.com/user-attachments/assets/539a8058-4eb1-48b1-a892-852a97bc2652) | **Generated Caption:** *a young girl in a pink shirt is riding a bike* |
+| ![Dog in grass](https://github.com/user-attachments/assets/07743043-bf9a-4738-af91-0725177f384b) | **Generated Caption:** *a dog runs through the grass* |
+| ![Dog in water](https://github.com/user-attachments/assets/1c04991d-205e-42bb-befd-e839ab9bd3b4) | **Generated Caption:** *a black dog is jumping into the water* |
+| ![Girl on a bike](https://github.com/user-attachments/assets/539a8058-4eb1-48b1-a892-852a97bc2652) | **Generated Caption:** *a young girl in a pink shirt is riding a bike* |
 
 ### Generation Modes
 
-**Greedy Decoding:**
-- Most probable token selection
-- Consistent, coherent captions
-- Best for reliable results
+#### `test_image()` – Standard Caption Generation
+- Always generates the same caption for the same image  
+- Uses the most confident/probable word at each step  
+- Produces reliable, consistent results  
+- Best for when you need predictable captions  
 
-**Temperature Sampling:**
-- Controlled creativity (T=0.1 to 1.2)
-- Diverse caption generation
-- Adjustable creativity vs coherence
+#### `test_with_sampling()` – Creative Caption Generation
+- Generates different captions each time you run it  
+- Uses temperature parameter to control randomness  
+- Lower temperature (e.g., `0.3`) = more conservative, similar to standard  
+- Higher temperature (e.g., `0.8–1.0`) = more creative and varied captions  
+- Best for when you want diverse caption options  
 
+---
 
-## 🚀 Key Innovations
+## References
 
-- **🎯 Multi-Caption Training**: Simultaneous processing of 5 captions per image
-- **🧠 Advanced Attention**: Custom Transformer blocks with proper masking
-- **📊 Smart Scheduling**: Warmup + cosine decay optimization
-- **🎨 Rich Augmentation**: 5-layer image transformation pipeline
-- **💾 Robust Recovery**: Automatic model saving for all scenarios
-- **🔄 Interactive Testing**: Built-in validation and custom image testing
+**[1]** Vaswani, Ashish, et al. ["Attention is all you need."](https://arxiv.org/abs/1706.03762) Advances in neural information processing systems 30 (2017).
 
+**[2]** Tan, Mingxing, and Quoc V. Le. ["EfficientNet: Rethinking model scaling for convolutional neural networks."](https://arxiv.org/abs/1905.11946) International conference on machine learning. PMLR, 2019.
 
-## 📚 References
+**[3]** Vinyals, Oriol, et al. ["Show and tell: A neural image caption generator."](https://arxiv.org/abs/1411.4555) Proceedings of the IEEE conference on computer vision and pattern recognition. 2015.
 
-**[1]** Vaswani, Ashish, et al. *"Attention is all you need."* Advances in neural information processing systems 30 (2017).
+**[4]** Xu, Kelvin, et al. ["Show, attend and tell: Neural image caption generation with visual attention."](https://arxiv.org/abs/1502.03044) International conference on machine learning. PMLR, 2015.
 
-**[2]** Tan, Mingxing, and Quoc V. Le. *"EfficientNet: Rethinking model scaling for convolutional neural networks."* International conference on machine learning. PMLR, 2019.
+---
 
-**[3]** Vinyals, Oriol, et al. *"Show and tell: A neural image caption generator."* Proceedings of the IEEE conference on computer vision and pattern recognition. 2015.
-
-**[4]** Xu, Kelvin, et al. *"Show, attend and tell: Neural image caption generation with visual attention."* International conference on machine learning. PMLR, 2015.
-
-
-## 📄 License
+## License
 
 MIT License. See [LICENSE](LICENSE) file for details.
 
 ---
-
-⭐ **Star this repository if you find it helpful!**
-
-🔗 **Share your generated captions using #TransformerImageCaptioning**
-
-💡 **Contribute to make it even better!**
 
 
 
