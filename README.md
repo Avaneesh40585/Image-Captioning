@@ -41,7 +41,7 @@ The model is trained on **Flickr8K Dataset** containing:
 
 *Can be easily adapted for Flickr30K, MS COCO, or custom datasets*
 
-How to Download & More about it over here: [Flickr8k Datasets](https://github.com/Avaneesh40585/Image-Captioning/releases/tag/dataset) 
+Download instructions and additional details are available here: [Flickr8k Datasets](https://github.com/Avaneesh40585/Image-Captioning/releases/tag/dataset) 
 
 ---
 
