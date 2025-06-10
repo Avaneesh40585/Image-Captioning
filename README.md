@@ -251,23 +251,17 @@ MIT License. See [LICENSE](LICENSE) file for details.
 
 Contributions are welcome! Here are some areas where you can help improve the project:
 
-- **Beam Search Decoding**  
-  Replace greedy decoding with beam search for more diverse and accurate caption generation.
+- **Beam Search Decoding** : Replace greedy decoding with beam search for more diverse and accurate caption generation.
 
-- **Attention Visualization**  
-  Add attention map visualization to highlight which parts of the image the model is focusing on during caption generation.
+- **Attention Visualization**  : Add attention map visualization to highlight which parts of the image the model is focusing on during caption generation.
 
-- **Pre-trained Model Support**  
-  Create an easy-to-use inference pipeline with downloadable pre-trained weights for quick deployment.
+- **Pre-trained Model Support**  : Create an easy-to-use inference pipeline with downloadable pre-trained weights for quick deployment.
 
-- **Additional Evaluation Metrics**  
-  Implement support for advanced metrics such as **METEOR**, **ROUGE-L**, and **SPICE** to provide a more comprehensive evaluation.
+- **Additional Evaluation Metrics**  : Implement support for advanced metrics such as **METEOR**, **ROUGE-L**, and **SPICE** to provide a more comprehensive evaluation.
 
-- **Vision Transformer Integration**  
-  Experiment with using a **ViT (Vision Transformer)** backbone instead of the traditional CNN to compare performance.
+- **Vision Transformer Integration**  : Experiment with using a **ViT (Vision Transformer)** backbone instead of the traditional CNN to compare performance.
 
-- **Cross-Dataset Training**  
-  Extend support to other datasets like **MS COCO** and **Flickr30K** to improve generalization and robustness.
+- **Cross-Dataset Training**  : Extend support to other datasets like **MS COCO** and **Flickr30K** to improve generalization and robustness.
 
 ### How to Contribute
 
