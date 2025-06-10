@@ -18,6 +18,7 @@ The model architecture combines EfficientNetB0 CNN for visual feature extraction
 8. 🎨 [Results](#results)  
 9. 📚 [References](#references)  
 10. 📄 [License](#license)
+11. 🤝 [Contributing](#contributing)
 
 ---
 
@@ -248,13 +249,33 @@ MIT License. See [LICENSE](LICENSE) file for details.
 
 ## Contributing
 
-Contributions welcome! Areas for improvement:
-- Beam search implementation
-- Attention visualization
-- Additional evaluation metrics
-- Support for other datasets
-- Add support for pre-trained models & inferencing
-- Model architecture experiments
+Contributions are welcome! Here are some areas where you can help improve the project:
+
+- **Beam Search Decoding**  
+  Replace greedy decoding with beam search for more diverse and accurate caption generation.
+
+- **Attention Visualization**  
+  Add attention map visualization to highlight which parts of the image the model is focusing on during caption generation.
+
+- **Pre-trained Model Support**  
+  Create an easy-to-use inference pipeline with downloadable pre-trained weights for quick deployment.
+
+- **Additional Evaluation Metrics**  
+  Implement support for advanced metrics such as **METEOR**, **ROUGE-L**, and **SPICE** to provide a more comprehensive evaluation.
+
+- **Vision Transformer Integration**  
+  Experiment with using a **ViT (Vision Transformer)** backbone instead of the traditional CNN to compare performance.
+
+- **Cross-Dataset Training**  
+  Extend support to other datasets like **MS COCO** and **Flickr30K** to improve generalization and robustness.
+
+### How to Contribute
+
+1. **Fork** the repository to your GitHub account.  
+2. **Create a new feature branch** for your enhancement or fix. (`git checkout -b feature/beam-search`)
+3. **Implement** your changes or new feature.  
+4. **Add tests and documentation** to support your code.  
+5. **Submit a pull request** with a clear and detailed description of your changes.
 
 ---
 
