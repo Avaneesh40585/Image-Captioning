@@ -2,6 +2,6 @@ tensorflow
 keras
 numpy
 matplotlib
-Pillow
 jupyter
 ipywidgets
+nltk
