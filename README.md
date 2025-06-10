@@ -12,18 +12,10 @@ The model architecture combines EfficientNetB0 CNN for visual feature extraction
 2. 🏗️ [Model Architecture](#model-architecture)  
 3. ✨ [Key Features](#key-features)  
 4. 🔄 [Training Pipeline Overview](#training-pipeline-overview)  
-   - Phase 1 – Data Setup  
-   - Phase 2 – Model Architecture  
-   - Phase 3 – Training Process  
-   - Phase 4 – Testing & Evaluation  
-   - ⏱️ Total Training Time  
 5. 📋 [Requirements](#requirements)  
 6. 📁 [Project Structure](#project-structure)  
 7. 🎯 [Usage](#usage)  
-   - 🔹 Pre-trained Model (Recommended)  
-   - 🔸 From Scratch  
 8. 🎨 [Results](#results)  
-   - Generation Modes  
 9. 📚 [References](#references)  
 10. 📄 [License](#license)
 
@@ -45,74 +37,95 @@ Download instructions and additional details are available here: [Flickr8k Datas
 
 ## Model Architecture
 ```
-Input Image (299x299x3)
-↓
-EfficientNetB0 CNN
-(Feature Extractor)
-↓
-Spatial Features → Sequential Embeddings (512D)
-↓
-Transformer Encoder
-(Multi-Head Attention)
-↓
-Transformer Decoder ← Text Embeddings
-(Masked + Cross Attention)
-↓
+Input Image (299×299×3)
+        ↓
+EfficientNetB0 CNN (Feature Extractor)
+        ↓
+Spatial Features → Dense(768D) → Reshape
+        ↓
+Transformer Encoder (Multi-Head Attention)
+        ↓
+Transformer Decoder
+   ↑                       ↓
+Text Embeddings +      Masked + 
+Positional Encoding    Cross Attention
+        ↓
 Vocabulary Projection (12K tokens)
-↓
+        ↓
 Generated Caption
 ```
 
-**Key Components:**
-- **CNN Backbone**: EfficientNetB0 (ImageNet pre-trained, frozen)
-- **Transformer Encoder**: 3 layers, 8 attention heads, 512D embeddings
+**Architecture Specifications:**
+- **CNN Backbone**: EfficientNetB0 (ImageNet pre-trained, fine-tuned last 30 layers)
+- **Transformer Encoder**: 3 layers, 12 attention heads, 768D embeddings
 - **Transformer Decoder**: 3 layers with causal masking and cross-attention
 - **Text Processing**: 12K vocabulary with learned positional embeddings
+- **Feed-Forward Dimension**: 2048D with GELU activation
+- **Dropout Rate**: 15% for regularization
 
 **A comprehensive explanation of the code is provided in the notebook itself.**
 
 ---
+
 ## Key Features
 
-- **Multi-Caption Training**: Processes 5 different captions per image simultaneously for robust learning  
-- **Advanced Transformer Architecture**: Custom encoder-decoder blocks with multi-head attention and proper masking  
-- **Intelligent Learning Rate Scheduling**: Warmup phase followed by cosine decay for optimal convergence  
-- **Comprehensive Data Augmentation**: 5-layer image transformation pipeline (flip, rotation, contrast, brightness, zoom)  
-- **Automatic Model Recovery**: Smart checkpointing system saves models during training interruptions  
-- **Interactive Testing Suite**: Built-in functions for validation testing and custom image evaluation  
+### Advanced Architecture
+- **Custom Transformer Implementation**: Hand-built encoder-decoder blocks with proper masking
+- **Multi-Caption Training**: Processes 5 captions per image with individual gradient updates
+- **Fine-tuned CNN**: EfficientNetB0 with selective layer unfreezing for optimal feature extraction
+- **Positional Embeddings**: Learned position encodings for sequence understanding
+
+### Training Optimizations
+- **Advanced Learning Rate Scheduling**: Warmup + cosine decay with AdamW optimizer
+- **Comprehensive Data Augmentation**: 5-layer pipeline (flip, rotation, contrast, brightness, zoom)
+- **Gradient Clipping**: Norm-based clipping for training stability
+- **Smart Callbacks**: Early stopping and model checkpointing with best weight restoration
+
+### Evaluation & Testing
+- **Multiple Metrics**: BLEU-4 and CIDEr scoring for comprehensive evaluation
+- **Flexible Generation**: Both greedy and temperature-based sampling
+- **Interactive Testing**: Built-in functions for custom image evaluation
+- **Robust Error Handling**: Graceful failure recovery and model saving
 
 ---
 
 ## Training Pipeline Overview
 
-### Phase 1 – Data Setup (Cells 1–15)
-- Downloads Flickr8K dataset (~1 GB) automatically via `wget`  
-- Extracts 8,000 images and 40,000 caption annotations  
-- Preprocesses text: lowercasing, adding special tokens, and vocabulary building  
-- Creates 80/20 train/validation split: 6,400 training / 1,600 validation images  
+### Phase 1 – Data Setup & Preprocessing
 
-### Phase 2 – Model Architecture (Cells 16–25)
-- Builds **EfficientNetB0** CNN feature extractor with frozen ImageNet weights  
-- Constructs custom Transformer encoder/decoder blocks  
-- Sets up 12K vocabulary with learned positional embeddings  
-- Configures a 5-layer image augmentation pipeline  
+- Downloads **Flickr8K dataset** automatically via `wget` commands (~1GB total)
+- Extracts **8,000 images** and **caption files** from zip archives
+- Loads and parses `Flickr8k.token.txt` containing **40,000 captions**
+- Filters malformed captions and **builds vocabulary** (~12K tokens)
+- Creates **train/validation split** (6,400 / 1,600 images)
+- Implements **robust error handling** for missing or corrupted files
 
-### Phase 3 – Training Process (Cells 26–35)
-- Trains for 30 epochs using the **AdamW optimizer**  
-- Applies warmup (first 10% of steps) + cosine decay for learning rate scheduling  
-- Processes **5 captions per image** with individual gradient updates  
-- Monitors training/validation loss and accuracy in real-time  
-- Automatically saves the best model when validation loss improves  
+### Phase 2 – Model Architecture Construction
 
-### Phase 4 – Testing & Evaluation (Cells 36–40)
-- Tests on 3 random validation images automatically  
-- Includes `test_image()` and `test_with_sampling()` functions  
-- Displays generated captions alongside input images  
-- Saves final model as `final_caption_model.keras`  
+- Builds **EfficientNetB0 CNN** feature extractor with pretrained **ImageNet weights**
+- Constructs **custom Transformer encoder blocks** with multi-head self-attention
+- Creates **Transformer decoder** with **causal masking** and **cross-attention**
+- Sets up **learned positional embeddings** and **text preprocessing pipeline**
+- Configures **5-layer image augmentation** strategy
+- Initializes complete `ImageCaptioningModel` with all components
 
-### ⏱️ Total Training Time
-- **GPU**: ~0.5-1 hour  
-- **CPU**: ~2–3 hours
+### Phase 3 – Advanced Training Process
+
+- Implements **learning rate scheduling** (warmup + cosine decay)
+- Configures **AdamW optimizer** with **gradient clipping** and **weight decay**
+- Processes **5 captions per image** with individual gradient updates
+- Applies **comprehensive callbacks** (early stopping, model checkpointing)
+- Monitors **training/validation metrics** in real-time
+- Automatically saves **best performing model** based on validation loss
+
+### Phase 4 – Evaluation & Testing
+
+- Evaluates model performance using **BLEU-4** and **CIDEr** metrics
+- Tests on **random validation samples** with **automatic caption generation**
+- Provides **interactive testing functions** for custom image inputs
+- Implements both **greedy decoding** and **temperature-based sampling**
+- Saves **final trained model** and displays comprehensive results
+- Generates **performance reports** with detailed metric analysis
 
 ---
 
@@ -122,6 +135,7 @@ tensorflow>=2.13.0
 keras>=2.13.0
 numpy>=1.21.0
 matplotlib>=3.5.0
+nltk>=3.8.0
 ```
 
 These requirements can be easily installed by: `pip install -r requirements.txt`
@@ -134,57 +148,51 @@ image-captioning-system/
 ├── Image Caption Generator.ipynb    # Complete implementation notebook
 ├── README.md                        # This file
 ├── requirements.txt                 # Dependencies
-└── models/                          # Saved models (generated after training)
-    ├── best_caption_model.keras
-    └── final_caption_model.keras
+├── models/                          # Saved models (generated after training)
+│   ├── best_caption_model.keras
+│   └── final_caption_model.keras
+├── Flicker8k_Dataset/              # Auto-downloaded image dataset
+│   └── *.jpg                       # 8,000 images
+└── Flickr8k_text/                  # Auto-downloaded text dataset
+    ├── Flickr8k.token.txt         # Main caption annotations (used in training)
+    ├── ExpertAnnotations.txt       # Expert-written captions
+    ├── CrowdFlowerAnnotations.txt  # Crowd-sourced caption quality ratings
+    ├── Flickr_8k.trainImages.txt  # Training set image list
+    ├── Flickr_8k.devImages.txt    # Development/validation set image list
+    └── Flickr_8k.testImages.txt   # Test set image list
 ```
 ---
 
 ## Usage
 
-### 🔹 Pre-trained Model (Recommended)
+### 1. Open the Notebook
 
-1. **Download pre-trained weights** from [Releases](https://github.com/Avaneesh40585/Image-Captioning/releases/tag/v1.0-weights):
-   - `best_caption_model.keras` - Best performing model
-   - Follow the “How to Use” section from the [Releases](https://github.com/Avaneesh40585/Image-Captioning/releases/tag/v1.0-weights) page for detailed instructions.
+Open the training notebook in your preferred environment (e.g., Jupyter, Colab, VS Code).
 
-2. **Open the notebook.**
-```jupyter notebook “Image Caption Generator.ipynb”```
+### 2. Execute the Complete Training Pipeline
 
-3. **Load and use the pre-trained model:**
-   - Navigate to the “Model Loading & Inference” section (Cells 41–45)
-   - Load the downloaded model:
-     ```python
-     caption_model = keras.models.load_model('best_caption_model.keras')
-     ```
-   - Use for standard captions:
-     ```python
-     test_image('your_image.jpg')
-     ```
-   - Use for creative captions:
-     ```python
-     test_with_sampling('your_image.jpg', temperature=0.8)
-     ```
+- Run all cells sequentially to go through all **4 phases** (see [Training Pipeline Overview](#training-pipeline-overview) )
+- **Dataset (~1GB)** downloads automatically – no manual setup required
+- **Vocabulary building** and **preprocessing** are handled internally
 
-### 🔸 From Scratch
+### 3. Monitor Training Progress
 
-1. **Open the notebook.**
-```jupyter notebook “Image Caption Generator.ipynb”```
+- Real-time **loss/accuracy metrics** displayed during training
+- **BLEU-4** and **CIDEr** scores computed during validation
+- **Best model** is automatically saved as: `models/best_caption_model.keras`
+- **Early stopping** ensures optimal performance and prevents overfitting
+- Estimated training time: **~1 hour on GPU** & **~2–3 hours on CPU**
 
-2. **Execute the complete training pipeline:**  
-   Run all cells sequentially to go through all 4 phases (see [Training Pipeline Overview](#training-pipeline-overview).)
+### 4. Test Your Trained Model
 
-3. **Monitor training progress:**
-   - Real-time loss/accuracy metrics displayed during training  
-   - Best model automatically saved as `best_caption_model.keras`  
-   - Training completes in:
-     - ~0.5–1 hour on **GPU**  
-     - ~2–3 hours on **CPU**
-
-4. **Test your trained model:**
-   - Automatic validation testing on 3 random images  
-   - Use provided functions to test with your own images  
-   - Final model saved as `final_caption_model.keras`
+- Automatic validation testing on **random images** after training
+- **Interactive testing functions** available for custom images:
+```
+test_image("path/to/image.jpg")  # Standard caption generation
+test_with_sampling("path/to/image.jpg", temperature=0.8)  # Creative captions
+```
+- **Final model** is saved as:`models/final_caption_model.keras`
+- Comprehensive evaluation metrics displayed: `BLEU-4: ~0.19` , `CIDEr: ~0.14`
 
 ---
 
@@ -192,9 +200,16 @@ image-captioning-system/
 
 | Image | Generated Caption |
 |-------|------------------|
-| ![Dog in grass](https://github.com/user-attachments/assets/07743043-bf9a-4738-af91-0725177f384b) | **Generated Caption:** *a dog runs through the grass* |
-| ![Dog in water](https://github.com/user-attachments/assets/1c04991d-205e-42bb-befd-e839ab9bd3b4) | **Generated Caption:** *a black dog is jumping into the water* |
-| ![Girl on a bike](https://github.com/user-attachments/assets/539a8058-4eb1-48b1-a892-852a97bc2652) | **Generated Caption:** *a young girl in a pink shirt is riding a bike* |
+| ![Dog in grass](https://github.com/user-attachments/assets/07743043-bf9a-4738-af91-0725177f384b) | **Generated Caption:** *a black and white dog is running through the grass* |
+| ![Dog in water](https://github.com/user-attachments/assets/1c04991d-205e-42bb-befd-e839ab9bd3b4) | **Generated Caption:** * a black dog is jumping into the water* |
+| ![Girl on a bike](https://github.com/user-attachments/assets/539a8058-4eb1-48b1-a892-852a97bc2652) | **Generated Caption:** *a young boy rides his bike down a hill* |
+
+
+### Metric Interpretation:
+- **BLEU-4 (0.1926)**: Competitive score for Flickr8K (typical range: 0.15-0.35)
+- **CIDEr (0.1395)**: Room for improvement (typical range: 0.3-1.2)
+- **Training Accuracy**: ~85-90% on final epochs
+- **Validation Accuracy**: ~80-85% with good generalization
 
 ### Generation Modes
 
@@ -231,6 +246,19 @@ MIT License. See [LICENSE](LICENSE) file for details.
 
 ---
 
+## Contributing
+
+Contributions welcome! Areas for improvement:
+- Beam search implementation
+- Attention visualization
+- Additional evaluation metrics
+- Support for other datasets
+- Add support for pre-trained models & inferencing
+- Model architecture experiments
+
+---
+
+**⭐ If this implementation helps your research or project, please consider giving it a star!**
 
 
 
