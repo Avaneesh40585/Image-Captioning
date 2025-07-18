@@ -202,7 +202,7 @@ test_with_sampling("path/to/image.jpg", temperature=0.8)  # Creative captions
 | Image | Generated Caption |
 |-------|------------------|
 | ![Dog in grass](https://github.com/user-attachments/assets/07743043-bf9a-4738-af91-0725177f384b) | **Generated Caption:** *a black and white dog is running through the grass* |
-| ![Dog in water](https://github.com/user-attachments/assets/1c04991d-205e-42bb-befd-e839ab9bd3b4) | **Generated Caption:** * a black dog is jumping into the water* |
+| ![Dog in water](https://github.com/user-attachments/assets/1c04991d-205e-42bb-befd-e839ab9bd3b4) | **Generated Caption:** *a black dog is jumping into the water* |
 | ![Girl on a bike](https://github.com/user-attachments/assets/539a8058-4eb1-48b1-a892-852a97bc2652) | **Generated Caption:** *a young boy rides his bike down a hill* |
 
 
